@@ -21,45 +21,6 @@ const CompleteApp = ({}) => {
       console.log("HASH PARAMS", hashParams)
       return hashParams;
     }
-  
-    const getTopSongs = async () => {
-      const url = 'https://api.spotify.com/v1/me/top/tracks/?time_range=short_term';
-      const headers = {
-        Authorization: 'Bearer ' + currentHashParams.access_token
-      };
-      
-      await fetch(url , { headers })
-        .then(response => response.json())
-        .then(async res => {
-          console.log("SONGS RETRIEVED",res)
-          const songs = [...res.items].map(song=> song.id)
-          return songs[0]
-            //below gets the audio features for a song
-          
-        })
-        .catch(error => {
-          // handle error
-        })
-    }
-
-    const getTopArtists = async () =>  {
-    //'electropop'
-      const url = 'https://api.spotify.com/v1/me/top/artists/?time_range=short_term';
-      const headers = {
-        Authorization: 'Bearer ' + currentHashParams.access_token
-      };
-      
-      await fetch(url , { headers })
-        .then(response => response.json())
-        .then(async res => {
-          console.log("ARTISTS RETRIEVED",res)
-          return res.items[0].id
-          
-        })
-        .catch(error => {
-          // handle error
-        })
-    }
 
     const getRecommendations = async () =>  {
       let artist = ''
@@ -68,7 +29,7 @@ const CompleteApp = ({}) => {
       const headers = {
         Authorization: 'Bearer ' + currentHashParams.access_token
       };
-      
+      //top artists gotten here
       await fetch(artisturl , { headers })
         .then(response => response.json())
         .then(async res => {
@@ -79,6 +40,7 @@ const CompleteApp = ({}) => {
         .catch(error => {
           // handle error
         })
+        //top songs gotten here
       const songsurl = 'https://api.spotify.com/v1/me/top/tracks/?time_range=short_term';
       await fetch(songsurl , { headers })
         .then(response => response.json())
@@ -86,15 +48,12 @@ const CompleteApp = ({}) => {
           console.log("SONGS RETRIEVED",res)
           const songs = [...res.items].map(song=> song.id)
           song = songs[0]
-            //below gets the audio features for a song
-          
         })
         .catch(error => {
           // handle error
         })
+        //standard genre is here, not sure about the right way to get this.
       const genre = 'electropop'
-      //'electropop'
-      //https://api.spotify.com/v1/recommendations \
         const url = `https://api.spotify.com/v1/recommendations/?seed_artists=${artist}&seed_genres=${genre}&seed_tracks=${song}&limit=50`;
         
         await fetch(url , { headers })
@@ -159,7 +118,6 @@ fetch(url, { headers })
     
    return (
       <div className="App" style={{justifyContent: "space-between", display: "flex", flexDirection: "column"}}>
-       
           <a href="http://localhost:8888/api/login">Sign into Spotify here</a>
     <div style={{display:"flex", justifyContent: "center",flexDirection:"column"}}>
       <button onClick={()=> GenerateNewPlaylist() }>Click here to generate a playlist</button>
