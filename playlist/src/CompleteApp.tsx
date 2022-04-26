@@ -18,7 +18,6 @@ const CompleteApp = ({}) => {
       while (e = r.exec(q)) {
         hashParams[e[1]] = decodeURIComponent(e[2])
       }
-      console.log("HASH PARAMS", hashParams)
       return hashParams;
     }
 
@@ -33,7 +32,6 @@ const CompleteApp = ({}) => {
       await fetch(artisturl , { headers })
         .then(response => response.json())
         .then(async res => {
-          console.log("ARTISTS RETRIEVED",res)
           artist = res.items[0].id
           
         })
@@ -45,7 +43,6 @@ const CompleteApp = ({}) => {
       await fetch(songsurl , { headers })
         .then(response => response.json())
         .then(async res => {
-          console.log("SONGS RETRIEVED",res)
           const songs = [...res.items].map(song=> song.id)
           song = `${songs[0]},${songs[1]}`
         })
@@ -60,7 +57,6 @@ const CompleteApp = ({}) => {
           .then(async res => {
             
             const uris = res.tracks.map((track: any)=> track.uri )
-            console.log("recommendations",uris)
             setTopSongsData(uris)
   
           })
@@ -108,7 +104,6 @@ fetch(url, { headers })
      getRecommendations()
     },[currentHashParams])
     useEffect(()=> {
-      console.log('top song data from use', topSongsData)
     },[topSongsData])
     
    return (
