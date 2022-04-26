@@ -47,7 +47,7 @@ const CompleteApp = ({}) => {
         .then(async res => {
           console.log("SONGS RETRIEVED",res)
           const songs = [...res.items].map(song=> song.id)
-          song = songs[0]
+          song = `${songs[0]},${songs[1]}`
         })
         .catch(error => {
           // handle error
@@ -79,19 +79,15 @@ const CompleteApp = ({}) => {
 fetch(url, { headers })
   .then(response => response.json())
   .then(async data => {
-    // use data
-    console.log("USER DATA",data)
     const uris = topSongsData.join(',')
-        console.log("URI's",uris)
     const url = `https://api.spotify.com/v1/users/${data.id}/playlists`;
     const headers = {
       Authorization: 'Bearer ' + currentHashParams.access_token
     };
-   const body =  JSON.stringify({name: "Kevin's 5 AM Playlist",description: "I hope this works.", public: false,collaborative: true})
+   const body =  JSON.stringify({name: "Playlist made by Kevin",description: "Generated from here https://github.com/MrKevinOConnell/playlistgenerator.",public: false,collaborative: true})
     await fetch(url , { headers,method: "POST", body }, )
       .then(response => response.json())
       .then(async res => {
-        
         const addSongsURL = `https://api.spotify.com/v1/playlists/${res.id}/tracks?uris=${uris}`;
         await fetch(addSongsURL , { headers,method: "POST" }, ).then(response => response.json()).then(res => {
           console.log("done!",res)
