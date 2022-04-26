@@ -53,7 +53,7 @@ router.get('/logged', async (req, res) => {
   .then(response => response.json())
   .then(data => {
     const query = querystring.stringify(data);
-    res.redirect(`?${query}`);
+    res.redirect(`${process.env.CLIENT_REDIRECTURI}?${query}`);
   });
 });
 
