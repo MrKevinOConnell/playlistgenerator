@@ -12,10 +12,13 @@ application.use(cors());
 
 const AuthRoutes = require('./routes/authRoutes.js');
 application.use('/api', cors(), AuthRoutes);
+
 const publicPath = path.join(__dirname, '../playlist/build', 'index.html');
 
 application.use(express.static(path.resolve(__dirname, "./../playlist/build")));
-
+application.get("/*", (req, res) =>
+  res.sendFile(path.resolve(__dirname, "./../playlist/build", "index.html"))
+);
 application.listen(PORT, () => {
   console.log(`Server started on port ${PORT}:)`);
 });
