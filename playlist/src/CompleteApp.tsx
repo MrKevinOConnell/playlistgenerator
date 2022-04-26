@@ -1,5 +1,5 @@
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from "react";
-import { useLocation,useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import React from 'react'
 
 const CompleteApp = ({}) => {
@@ -105,11 +105,10 @@ fetch(url, { headers })
     },[currentHashParams])
     useEffect(()=> {
     },[topSongsData])
-      const navigate = useNavigate()
+    
    return (
- 
       <div className="App" style={{justifyContent: "space-between", display: "flex", flexDirection: "column"}}>
-   <button onClick={()=>  navigate('/api/logged') }>Sign into Spotify here!</button>
+          <a href={"/api/logged"}>Sign into Spotify here</a>
     <div style={{display:"flex", justifyContent: "center",flexDirection:"column"}}>
       <button onClick={()=> GenerateNewPlaylist() }>Click here to generate a playlist</button>
 </div>
