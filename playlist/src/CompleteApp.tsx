@@ -108,7 +108,7 @@ fetch(url, { headers })
     
    return (
       <div className="App" style={{justifyContent: "space-between", display: "flex", flexDirection: "column"}}>
-          <a href="http://localhost:8888/api/login">Sign into Spotify here</a>
+          <a href={`${process.env.REDIRECTURI}`}>Sign into Spotify here</a>
     <div style={{display:"flex", justifyContent: "center",flexDirection:"column"}}>
       <button onClick={()=> GenerateNewPlaylist() }>Click here to generate a playlist</button>
 </div>
