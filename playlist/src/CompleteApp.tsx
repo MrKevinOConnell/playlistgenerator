@@ -53,8 +53,7 @@ const CompleteApp = ({}) => {
           // handle error
         })
         //standard genre is here, not sure about the right way to get this.
-      const genre = 'electropop'
-        const url = `https://api.spotify.com/v1/recommendations/?seed_artists=${artist}&seed_genres=${genre}&seed_tracks=${song}&limit=50`;
+        const url = `https://api.spotify.com/v1/recommendations/?seed_artists=${artist}&seed_tracks=${song}&limit=50`;
         
         await fetch(url , { headers })
           .then(response => response.json())
@@ -117,10 +116,6 @@ fetch(url, { headers })
           <a href="http://localhost:8888/api/login">Sign into Spotify here</a>
     <div style={{display:"flex", justifyContent: "center",flexDirection:"column"}}>
       <button onClick={()=> GenerateNewPlaylist() }>Click here to generate a playlist</button>
-    {topSongsData.map((song: any) => {
-      return (<div key={song.id}>{song.danceability}</div>) 
-    })}
-
 </div>
       </div>
     )
