@@ -6,11 +6,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cd backend/ && node index.js",
-    "heroku-postbuild": "cd playlist && npm install && npm run build"
+    "heroku-postbuild": "cd playlist && npm install && npm run build && cd ../backend"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MrKevinOConnell/playlistgenerator.git"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0",
+    "node-fetch": "^2.6.7",
+    "path": "^0.12.7",
+    "querystring": "^0.2.1"
   },
   "author": "",
   "license": "ISC",
