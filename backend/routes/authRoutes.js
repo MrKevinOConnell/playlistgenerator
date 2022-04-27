@@ -21,7 +21,7 @@ router.get('/login', async (req, res) => {
     playlist-read-private
     playlist-modify-public
     playlist-modify-private`;
-
+console.log("process.env.CLIENT_ID",process.env.CLIENT_ID)
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
