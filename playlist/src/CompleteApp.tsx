@@ -129,7 +129,7 @@ fetch(url, { headers })
     },[currentHashParams])
 
     const renderTrackInfo = useCallback(() => {
-        return (
+        return topSongsInfo.length && (
             <Grid justifyContent="center" container direction="row" spacing={2}
             > 
               
@@ -160,7 +160,7 @@ fetch(url, { headers })
     </>
     }
     </Grid>
-        )
+        ) 
     },[topSongsInfo,topArtistInfo]);
 
     useEffect(()=> {
@@ -181,9 +181,8 @@ renderTrackInfo()
         <Grid>
     <Link style={{textAlign: "center"}} href="https://find-new-songs.herokuapp.com/api/login">Sign into Spotify here</Link>
     </Grid>
-    <Grid container item justifyContent="center">
-    {topSongsInfo.length && renderTrackInfo()}
-    </Grid>
+   
+    {!!topSongsInfo.length && renderTrackInfo()}
     <Grid container item justifyContent="center">
    
       <Button size="small" onClick={()=> GenerateNewPlaylist() }>Click here to generate a playlist</Button>
