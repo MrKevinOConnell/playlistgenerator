@@ -38,7 +38,6 @@ const CompleteApp = ({}) => {
         .then(response => response.json())
         .then(async res => {
           artist = res.items[0].id
-          console.log("complete artist", res.items[0])
           info['artist'] = {name: res.items[0].name,pic: res.items[0].images[0],external_urls: res.items[0].external_urls}
           setTopArtistInfo({...topArtistInfo, artist: {name: res.items[0].name,pic: res.items[0].images[0]}})
             //top songs gotten here
@@ -167,8 +166,6 @@ fetch(url, { headers })
     },[topSongsInfo,topArtistInfo]);
 
     useEffect(()=> {
-        console.log("changed",topSongsInfo)
-        console.log("artists",topArtistInfo)
 renderTrackInfo()
     },[renderTrackInfo])
 
