@@ -1,6 +1,8 @@
 import { JSXElementConstructor, ReactElement, ReactFragment, ReactPortal, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import React from 'react'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer, toast } from 'react-toastify';
 
 const CompleteApp = ({}) => {
     const[currentHashParams,setHashParams] = useState({} as any)
@@ -85,9 +87,17 @@ fetch(url, { headers })
       .then(async res => {
         const addSongsURL = `https://api.spotify.com/v1/playlists/${res.id}/tracks?uris=${uris}`;
         await fetch(addSongsURL , { headers,method: "POST" }, ).then(response => response.json()).then(res => {
-          console.log("done!",res)
+          toast.success("Playlist generated!",{
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
         })
-
+       
       })
       .catch(error => {
         // handle error
@@ -107,10 +117,11 @@ fetch(url, { headers })
     },[topSongsData])
     
    return (
-      <div className="App" style={{justifyContent: "space-between", display: "flex", flexDirection: "column"}}>
-          <a href="https://find-new-songs.herokuapp.com/api/login">Sign into Spotify here</a>
-    <div style={{display:"flex", justifyContent: "center",flexDirection:"column"}}>
-      <button onClick={()=> GenerateNewPlaylist() }>Click here to generate a playlist</button>
+      <div style={{justifyContent: "space-between", display: "flex", flexDirection: "column"}}>
+            
+          <a style={{textAlign: "center"}} href="http://localhost:8888/api/login">Sign into Spotify here</a>
+    <div style={{display:"flex", alignItems: "center",flexDirection:"column"}}>
+      <button style={{justifyContent: "center"}} onClick={()=> GenerateNewPlaylist() }>Click here to generate a playlist</button>
 </div>
       </div>
     )
