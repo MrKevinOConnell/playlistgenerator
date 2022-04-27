@@ -87,7 +87,7 @@ fetch(url, { headers })
       .then(async res => {
         const addSongsURL = `https://api.spotify.com/v1/playlists/${res.id}/tracks?uris=${uris}`;
         await fetch(addSongsURL , { headers,method: "POST" }, ).then(response => response.json()).then(res => {
-          toast.success("Playlist generated!",{
+          toast.success("Playlist generated, look at your Spotify!",{
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
