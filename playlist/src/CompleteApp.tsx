@@ -28,7 +28,6 @@ const CompleteApp = ({}) => {
     const getRecommendations = async () =>  {
       let artist = ''
       let song = ''
-      let info = {} as any
       const artisturl = 'https://api.spotify.com/v1/me/top/artists/?time_range=short_term';
       const headers = {
         Authorization: 'Bearer ' + currentHashParams.access_token
@@ -38,8 +37,9 @@ const CompleteApp = ({}) => {
         .then(response => response.json())
         .then(async res => {
           artist = res.items[0].id
-          info['artist'] = {name: res.items[0].name,pic: res.items[0].images[0],external_urls: res.items[0].external_urls}
-          setTopArtistInfo({...topArtistInfo, artist: {name: res.items[0].name,pic: res.items[0].images[0]}})
+
+          const finartist = {name: res.items[0].name,pic: res.items[0].images[0],external_urls: res.items[0].external_urls}
+          setTopArtistInfo({...topArtistInfo, artist: {name: res.items[0].name,pic: res.items[0].images[0],external_urls: res.items[0].external_urls }})
             //top songs gotten here
       const songsurl = 'https://api.spotify.com/v1/me/top/tracks/?time_range=short_term';
       await fetch(songsurl , { headers })
@@ -48,8 +48,6 @@ const CompleteApp = ({}) => {
             setTopSongsInfo([...topSongsInfo,res.items[0],res.items[1]])
           const songs = [...res.items].map(song=> song.id)
           song = `${songs[0]},${songs[1]}`
-         
-          
         })
         .catch(error => {
           // handle error
