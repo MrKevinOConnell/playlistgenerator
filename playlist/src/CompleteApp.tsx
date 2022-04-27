@@ -97,7 +97,6 @@ fetch(url, { headers })
             progress: undefined,
           });
         })
-       
       })
       .catch(error => {
         // handle error
@@ -118,8 +117,7 @@ fetch(url, { headers })
     
    return (
       <div style={{justifyContent: "space-between", display: "flex", flexDirection: "column"}}>
-            
-          <a style={{textAlign: "center"}} href="http://localhost:8888/api/login">Sign into Spotify here</a>
+          <a style={{textAlign: "center"}} href="https://find-new-songs.herokuapp.com/api/login">Sign into Spotify here</a>
     <div style={{display:"flex", alignItems: "center",flexDirection:"column"}}>
       <button style={{justifyContent: "center"}} onClick={()=> GenerateNewPlaylist() }>Click here to generate a playlist</button>
 </div>
