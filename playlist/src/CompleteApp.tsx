@@ -182,7 +182,7 @@ renderTrackInfo()
     <Link style={{textAlign: "center"}} href="https://find-new-songs.herokuapp.com/api/login">Sign into Spotify here</Link>
     </Grid>
     <Grid container item justifyContent="center">
-    {renderTrackInfo()}
+    {topSongsInfo.length && renderTrackInfo()}
     </Grid>
     <Grid container item justifyContent="center">
    
