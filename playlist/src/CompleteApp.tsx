@@ -445,7 +445,7 @@ const CompleteApp = () => {
   useEffect(() => {
     renderTrackInfo()
   }, [renderTrackInfo])
-if(!currentHashParams.access_code){
+if(currentHashParams === {}){
   return (
   <Grid
   container
