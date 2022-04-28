@@ -85,14 +85,21 @@ router.post('/joinRoom', async (req,res,next) => {
     },opts);
     if(Room) {
     let users = [...Room.users]
+    const ids = users.map(user => user.id)
+const index = ids.findIndex((id) => id === user.id)
+if(index === -1) {
     users = [...users,user]
     console.log('new users',users)
       await Room.update({users})
       await req.transaction.commit()
       res.status(200).json(Room.users)
+}
+else {
+  throw new Error("You are already in this room!")
+}
     }
     else {
-      res.status(200).json({error: "no room found with that code"})
+      throw new Error("No room found with this code!")
     }
   } catch (err) {
     await req.transaction.rollback()
