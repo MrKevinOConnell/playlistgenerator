@@ -22,7 +22,7 @@ module.exports = {
     database: process.env.NAME,
     host: process.env.HOST,
     dialect: 'postgres',
-    dialectOptions: { ssl: true },
+    dialectOptions: { ssl: {require: true, rejectUnauthorized: false } },
     seederStorage: 'sequelize',
   },
 }
