@@ -5,7 +5,7 @@ import React from 'react'
 import 'react-toastify/dist/ReactToastify.css'
 import { toast } from 'react-toastify'
 import { io } from "socket.io-client";
-import SocketContext from './CreateContext'
+import SocketContext from './context/socket'
 
 const CompleteApp = () => {
   const socket = useContext(SocketContext)

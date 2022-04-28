@@ -4,7 +4,7 @@ import CompleteApp from './CompleteApp'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer, toast } from 'react-toastify'
-import SocketContext, { SocketProvider } from './CreateContext'
+import { SocketContext } from './../src/context'
 import { io } from 'socket.io-client'
 
 function App() {
