@@ -23,7 +23,6 @@ function topKFrequent(nums, k) {
   const sortedArray = hashToArray.sort((a,b) => b[1] - a[1])
   const finishedElements = sortedArray.filter(element => element[1] >= k);
   const sortedElements = finishedElements.map(num => num[0])
-  console.log('sorted elements',sortedElements)
   return sortedElements
 }
 
