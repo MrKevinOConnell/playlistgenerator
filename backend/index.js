@@ -23,11 +23,6 @@ server.listen(PORT, () => {
 io.on("connection", (socket) => {
   console.log(`Client ${socket.id} connected`);
 
-  io.on(`${roomCode}`, (data) => {
-    console.log('submission!',data)
-    io.emit(`${data.roomCode}`,{ url: data.url })
-  })
-
 });
 
 module.exports = io
