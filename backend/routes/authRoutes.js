@@ -126,7 +126,7 @@ router.post('/playlist', async (req,res,next) => {
     const headers = {
       Authorization: 'Bearer ' + token
     };
-    const playlistName = !!foundRoom.users.length ? foundRoom.users.map(user => user.name).join() : "Group Playlist made by Kevin"
+    const playlistName = foundRoom.users.length ? foundRoom.users.map(user => user.name).join() : "Group Playlist made by Kevin"
     //,"users":[{"id":"kevinoconnell1","favorites":{"artists":[],"songs":[]}}],
     console.log("user length",foundRoom.users.length);
     for(const user of foundRoom.users) {
