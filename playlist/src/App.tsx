@@ -4,8 +4,8 @@ import CompleteApp from './CompleteApp'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer, toast } from 'react-toastify'
-import { SocketContext } from './../src/context'
 import { io } from 'socket.io-client'
+import SocketContext from './socket'
 
 function App() {
   const socket = io('https://find-new-songs.herokuapp.com', { transports: ['websocket'] })
