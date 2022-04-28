@@ -445,7 +445,23 @@ const CompleteApp = () => {
   useEffect(() => {
     renderTrackInfo()
   }, [renderTrackInfo])
-
+if(!currentHashParams.access_code){
+  return (
+  <Grid
+  container
+  spacing={2}
+  direction="column"
+  alignItems="center"
+  justifyContent="space-around"
+  style={{ minHeight: '110vh' }}>
+  <Grid>
+    <Link style={{ textAlign: 'center' }} href="https://find-new-songs.herokuapp.com/api/login">
+      Sign into Spotify here
+    </Link>
+  </Grid>
+  </Grid>
+  )
+}
   return (
     <Grid
       container
@@ -454,14 +470,8 @@ const CompleteApp = () => {
       alignItems="center"
       justifyContent="space-around"
       style={{ minHeight: '110vh' }}>
-      <Grid>
-        <Link style={{ textAlign: 'center' }} href="https://find-new-songs.herokuapp.com/api/login">
-          Sign into Spotify here
-        </Link>
-      </Grid>
-
-      {currentHashParams && !!topSongsInfo.length && renderTrackInfo()}
-      {currentHashParams.access_code && <>
+  
+      {!!topSongsInfo.length && renderTrackInfo()}
       <Grid container item justifyContent="center">
         <Button size="small" onClick={() => GenerateNewPlaylist()}>
           Click here to generate a individual playlist
@@ -485,8 +495,6 @@ const CompleteApp = () => {
           Generate group playlist here!
         </Button>
       </Grid>
-      </>
-}
     </Grid>
   )
 }
