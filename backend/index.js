@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const path = require('path')
 const { createServer } = require("http");
-import { Server } from "socket.io";
+const { Server } = require("socket.io");
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const PORT = process.env.PORT || 8888
 const application = express()
