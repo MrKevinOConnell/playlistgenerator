@@ -5,7 +5,8 @@ const querystring = require('querystring')
 const { sequelize, room } = require('./../models')
 const uuid = require('uuid')
 const Sequelize = require('sequelize')
-const io  = require('../index')
+const app=require('./../index')
+const io =app.getSocketIo()
 // this can be used as a seperate module
 const encodeFormData = (data) => {
   return Object.keys(data)

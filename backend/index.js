@@ -34,4 +34,4 @@ server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}:)`)
 })
 
-module.exports = io
+global.io = io
