@@ -101,7 +101,7 @@ router.post('/joinRoom', async (req, res, next) => {
         res.status(200).json(Room.users)
         io.emit(`${roomCode}/joined`,`User joined room ${roomCode} `)
       } else {
-        throw new Error('You are already in this room!')
+       res.status(200).json(Room.users)
       }
     } else {
       throw new Error('No room found with this code!')
