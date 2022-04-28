@@ -2,12 +2,13 @@ const express = require('express')
 const cors = require('cors')
 const path = require('path')
 const { createServer } = require("http");
-const { Server } = require("socket.io");
+const SocketServer = require("socket.io")
+const Server = SocketServer.Server;
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const PORT = process.env.PORT || 8888
 const application = express()
 const server = createServer(application)
-export const io = new Server(server, {
+const io = new Server(server, {
   serveClient: false,
   cors: {
     origin: '*'
@@ -25,8 +26,12 @@ application.use(express.static(path.resolve(__dirname, './../playlist/build')))
 application.get('/*', (req, res) => res.sendFile(path.resolve(__dirname, './../playlist/build', 'index.html')))
 
 io.on('connection', (socket) => {
-console.log('connected')
+  socket.on('broadcast', ({ ev, args }) => {
+    io.sockets.emit(ev, args)
+  })
 })
 server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}:)`)
 })
+
+module.exports = {io}
