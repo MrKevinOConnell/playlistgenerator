@@ -192,7 +192,7 @@ fetch(url, { headers })
                   Authorization: 'Bearer ' + currentHashParams.access_token,
                   "Content-Type": "application/json"
                 };
-                const body =  JSON.stringify({roomCode: roomCode,user: {id: data.id,favorites:completeData}})
+                const body =  JSON.stringify({roomCode: roomCode,user: {name: data.display_name ? data.display_name : data.id,  id: data.id,favorites:completeData}})
         fetch(url, { headers, body, method: "post" })
           .then(response => response.json())
           .then(async data => {

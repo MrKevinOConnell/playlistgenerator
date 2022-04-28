@@ -126,6 +126,7 @@ router.post('/playlist', async (req,res,next) => {
     const headers = {
       Authorization: 'Bearer ' + token
     };
+    const playlistName = !!foundRoom.users.length ? foundRoom.users.map(user => user.name).join() : "Group Playlist made by Kevin"
     //,"users":[{"id":"kevinoconnell1","favorites":{"artists":[],"songs":[]}}],
     console.log("user length",foundRoom.users.length);
     for(const user of foundRoom.users) {
@@ -167,7 +168,7 @@ const userArtists = favorites.artists.map((artist) => artist.id)
     const uris = commonSongs.join(',')
     console.log('uris')
 const url = `https://api.spotify.com/v1/users/${userId}/playlists`;
-const body =  JSON.stringify({name: "Group Playlist made by Kevin",description: "Generated from here https://github.com/MrKevinOConnell/playlistgenerator.",public: false,collaborative: true})
+const body =  JSON.stringify({name: playlistName,description: "Generated from here https://github.com/MrKevinOConnell/playlistgenerator.",public: false,collaborative: true})
 await fetch(url , { headers,method: "POST", body }, )
   .then(response => response.json())
   .then(async playlistres => {
