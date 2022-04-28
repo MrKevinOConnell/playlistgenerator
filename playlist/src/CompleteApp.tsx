@@ -460,7 +460,8 @@ const CompleteApp = () => {
         </Link>
       </Grid>
 
-      {!!topSongsInfo.length && renderTrackInfo()}
+      {currentHashParams && !!topSongsInfo.length && renderTrackInfo()}
+      {currentHashParams.access_code && <>
       <Grid container item justifyContent="center">
         <Button size="small" onClick={() => GenerateNewPlaylist()}>
           Click here to generate a individual playlist
@@ -484,6 +485,8 @@ const CompleteApp = () => {
           Generate group playlist here!
         </Button>
       </Grid>
+      </>
+}
     </Grid>
   )
 }
