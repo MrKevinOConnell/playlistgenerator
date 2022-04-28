@@ -42,3 +42,4 @@ backend/yarn.lock
 backend/yarn.lock
 *.lock
 *.lock
+node_modules

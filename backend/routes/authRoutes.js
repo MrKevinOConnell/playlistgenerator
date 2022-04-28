@@ -1,34 +1,33 @@
-const express = require('express');
-const router = express.Router();
-const fetch = require('node-fetch');
-const querystring = require('querystring');
+const express = require('express')
+const router = express.Router()
+const fetch = require('node-fetch')
+const querystring = require('querystring')
 const { sequelize, room } = require('./../models')
 const uuid = require('uuid')
-const Sequelize = require('sequelize');
+const Sequelize = require('sequelize')
 // this can be used as a seperate module
 const encodeFormData = (data) => {
   return Object.keys(data)
-    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
-    .join('&');
+    .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+    .join('&')
 }
 
 function topKFrequent(nums, k) {
   let hash = {}
 
   for (let num of nums) {
-      if (!hash[`${num}`]) hash[num] = 0
-      hash[`${num}`]++
+    if (!hash[`${num}`]) hash[num] = 0
+    hash[`${num}`]++
   }
   const hashToArray = Object.entries(hash)
-  const sortedArray = hashToArray.sort((a,b) => b[1] - a[1])
-  const finishedElements = sortedArray.filter(element => element[1] >= k);
-  const sortedElements = finishedElements.map(num => num[0])
+  const sortedArray = hashToArray.sort((a, b) => b[1] - a[1])
+  const finishedElements = sortedArray.filter((element) => element[1] >= k)
+  const sortedElements = finishedElements.map((num) => num[0])
   return sortedElements
 }
 
 router.get('/login', async (req, res) => {
-  const scope =
-    `user-modify-playback-state
+  const scope = `user-modify-playback-state
     user-read-playback-state
     user-read-currently-playing
     user-library-modify
@@ -36,70 +35,73 @@ router.get('/login', async (req, res) => {
     user-top-read
     playlist-read-private
     playlist-modify-public
-    playlist-modify-private`;
-  res.redirect('https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id: process.env.CLIENT_ID,
-      scope: scope,
-      redirect_uri: process.env.REDIRECTURI
-    })
-  );
-});
+    playlist-modify-private`
+  res.redirect(
+    'https://accounts.spotify.com/authorize?' +
+      querystring.stringify({
+        response_type: 'code',
+        client_id: process.env.CLIENT_ID,
+        scope: scope,
+        redirect_uri: process.env.REDIRECTURI
+      })
+  )
+})
 
-router.post('/room', async (req,res,next) => {
-   req.transaction = await sequelize.transaction()
+router.post('/room', async (req, res, next) => {
+  req.transaction = await sequelize.transaction()
   try {
-   
-    const {user}= req.body;
-    const roomCode = await Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8)
+    const { user } = req.body
+    const roomCode = await Math.random()
+      .toString(36)
+      .replace(/[^a-z]+/g, '')
+      .substr(0, 8)
     const rooms = await room.findAll({
-    where: { code: roomCode },
-  });
-  const existRoom = rooms[0];
-  if (!existRoom) {
-    const id = await uuid.v4()
-   const newRoom =  await room.create({ code: roomCode,users:[user],id });
-   await req.transaction.commit()
-   res.json(newRoom);
-  }
-  else {
-    res.json(existRoom)
-  }
+      where: { code: roomCode }
+    })
+    const existRoom = rooms[0]
+    if (!existRoom) {
+      const id = await uuid.v4()
+      const newRoom = await room.create({ code: roomCode, users: [user], id })
+      await req.transaction.commit()
+      res.json(newRoom)
+    } else {
+      res.json(existRoom)
+    }
   } catch (err) {
     await req.transaction.rollback()
     err.handler = 'createChatRoom'
     next(err)
   }
 })
- //,"users":[{"id":"kevinoconnell1","favorites":{"artists":[],"songs":[]}}],
-router.post('/joinRoom', async (req,res,next) => {
+//,"users":[{"id":"kevinoconnell1","favorites":{"artists":[],"songs":[]}}],
+router.post('/joinRoom', async (req, res, next) => {
   req.transaction = await sequelize.transaction()
   try {
-    const { roomCode,user } = req.body
+    const { roomCode, user } = req.body
     const opts = { transaction: req.transaction }
-     const Room = await room.findOne({
-      where: {
-        code: roomCode,
+    const Room = await room.findOne(
+      {
+        where: {
+          code: roomCode
+        }
       },
-    },opts);
-    if(Room) {
-    let users = [...Room.users]
-    const ids = users.map(user => user.id)
-const index = ids.findIndex((id) => id === user.id)
-if(index === -1) {
-    users = [...users,user]
-    console.log('new users',users)
-      await Room.update({users})
-      await req.transaction.commit()
-      res.status(200).json(Room.users)
-}
-else {
-  throw new Error("You are already in this room!")
-}
-    }
-    else {
-      throw new Error("No room found with this code!")
+      opts
+    )
+    if (Room) {
+      let users = [...Room.users]
+      const ids = users.map((user) => user.id)
+      const index = ids.findIndex((id) => id === user.id)
+      if (index === -1) {
+        users = [...users, user]
+        console.log('new users', users)
+        await Room.update({ users })
+        await req.transaction.commit()
+        res.status(200).json(Room.users)
+      } else {
+        throw new Error('You are already in this room!')
+      }
+    } else {
+      throw new Error('No room found with this code!')
     }
   } catch (err) {
     await req.transaction.rollback()
@@ -110,97 +112,102 @@ else {
 /*
 generates group playlist
 */
-router.post('/playlist', async (req,res,next) => {
+router.post('/playlist', async (req, res, next) => {
   req.transaction = await sequelize.transaction()
   try {
-  const { roomCode,userId,token  } = req.body
-  const rooms = await room.findAll({
-    where: { code: roomCode },
-  });
-  const foundRoom = rooms[0]
-
-  if(foundRoom) {
-    let commonSongs = []
-    let commonArtists = [];
-    let commonSongIds = []
-    const headers = {
-      Authorization: 'Bearer ' + token
-    };
-    const playlistName = foundRoom.users.length ? foundRoom.users.map(user => user.name).join() : "Group Playlist made by Kevin"
-    //,"users":[{"id":"kevinoconnell1","favorites":{"artists":[],"songs":[]}}],
-    console.log("user length",foundRoom.users.length);
-    for(const user of foundRoom.users) {
-const favorites = user.favorites
-const userSongs =  favorites.songs.map(song=>song.id)
-const userUris = favorites.songs.map(song=>song.uri)
-const userArtists = favorites.artists.map((artist) => artist.id)
-    commonArtists = [...commonArtists,...userArtists]
-      commonSongIds =  [...commonSongIds,...userSongs]
-      commonSongs = [...commonSongs,...userUris]
-    }
-    
-
-    commonSongs = topKFrequent(commonSongs,foundRoom.users.length/2);
-    commonArtists = topKFrequent(commonArtists,foundRoom.users.length/2).slice(0,5)
-    commonSongIds = topKFrequent(commonSongIds,foundRoom.users.length/2).slice(0,5)
-    console.log('common songs',commonSongs.length)
-    console.log('common songids',commonSongIds.length)
-    console.log('common Artists',commonArtists.length)
-    const artist = `${commonArtists[0]},${commonArtists[1]}`
-    const song = `${commonSongIds[0]},${commonSongIds[1]}`
-    const remain = commonSongs.length >= 60 ? 0 : 60-commonSongs.length
-    console.log("remain length",remain);
-    if(remain > 0) {
-      //grabs ids
-    const recommendurl = `https://api.spotify.com/v1/recommendations/?seed_artists=${artist}&seed_tracks=${song}&limit=${remain}`;
-    await fetch(recommendurl , { headers })
-      .then(response => response.json())
-      .then(async res => {
-        const uris = res.tracks.map((track)=> track.uri )
-        commonSongs = [...commonSongs,...uris].slice(0,60);
-      })
-      .catch(error => {
-        // handle error
-        console.log('error when reccomend', error)
-      })
-    }
-
-    const uris = commonSongs.join(',')
-    console.log('uris')
-const url = `https://api.spotify.com/v1/users/${userId}/playlists`;
-const body =  JSON.stringify({name: playlistName,description: "Generated from here https://github.com/MrKevinOConnell/playlistgenerator.",public: false,collaborative: true})
-await fetch(url , { headers,method: "POST", body }, )
-  .then(response => response.json())
-  .then(async playlistres => {
-    const addSongsURL = `https://api.spotify.com/v1/playlists/${playlistres.id}/tracks?uris=${uris}`;
-    await fetch(addSongsURL , { headers,method: "POST" }, ).then(response => response.json()).then(res => {
-console.log('songs',res)
+    const { roomCode, userId, token } = req.body
+    const rooms = await room.findAll({
+      where: { code: roomCode }
     })
-    await req.transaction.commit()
-    console.log("playlist res",playlistres)
-    res.status(200).json({url:playlistres.external_urls.spotify});
-  })
-  .catch(error => {
-    // handle error
-    console.log("error", error)
-  })
-.catch(error => {
-// handle error
-err.handler = 'createPlaylist'
-next(error)
-})
-  }
-  else {
-    res.status("401").send({error:"room code can't be found"})
-  }
-}
-catch(err) {
-  console.log('error when making playlist', err)
-  await req.transaction.rollback()
-  res.send(err)
-}
-})
+    const foundRoom = rooms[0]
 
+    if (foundRoom) {
+      let commonSongs = []
+      let commonArtists = []
+      let commonSongIds = []
+      const headers = {
+        Authorization: 'Bearer ' + token
+      }
+      const playlistName = foundRoom.users.length
+        ? foundRoom.users.map((user) => user.name).join()
+        : 'Group Playlist made by Kevin'
+      //,"users":[{"id":"kevinoconnell1","favorites":{"artists":[],"songs":[]}}],
+      console.log('user length', foundRoom.users.length)
+      for (const user of foundRoom.users) {
+        const favorites = user.favorites
+        const userSongs = favorites.songs.map((song) => song.id)
+        const userUris = favorites.songs.map((song) => song.uri)
+        const userArtists = favorites.artists.map((artist) => artist.id)
+        commonArtists = [...commonArtists, ...userArtists]
+        commonSongIds = [...commonSongIds, ...userSongs]
+        commonSongs = [...commonSongs, ...userUris]
+      }
+
+      commonSongs = topKFrequent(commonSongs, foundRoom.users.length / 2)
+      commonArtists = topKFrequent(commonArtists, foundRoom.users.length / 2).slice(0, 5)
+      commonSongIds = topKFrequent(commonSongIds, foundRoom.users.length / 2).slice(0, 5)
+      console.log('common songs', commonSongs.length)
+      console.log('common songids', commonSongIds.length)
+      console.log('common Artists', commonArtists.length)
+      const artist = `${commonArtists[0]},${commonArtists[1]}`
+      const song = `${commonSongIds[0]},${commonSongIds[1]}`
+      const remain = commonSongs.length >= 60 ? 0 : 60 - commonSongs.length
+      console.log('remain length', remain)
+      if (remain > 0) {
+        //grabs ids
+        const recommendurl = `https://api.spotify.com/v1/recommendations/?seed_artists=${artist}&seed_tracks=${song}&limit=${remain}`
+        await fetch(recommendurl, { headers })
+          .then((response) => response.json())
+          .then(async (res) => {
+            const uris = res.tracks.map((track) => track.uri)
+            commonSongs = [...commonSongs, ...uris].slice(0, 60)
+          })
+          .catch((error) => {
+            // handle error
+            console.log('error when reccomend', error)
+          })
+      }
+
+      const uris = commonSongs.join(',')
+      console.log('uris')
+      const url = `https://api.spotify.com/v1/users/${userId}/playlists`
+      const body = JSON.stringify({
+        name: playlistName,
+        description: 'Generated from here https://github.com/MrKevinOConnell/playlistgenerator.',
+        public: false,
+        collaborative: true
+      })
+      await fetch(url, { headers, method: 'POST', body })
+        .then((response) => response.json())
+        .then(async (playlistres) => {
+          const addSongsURL = `https://api.spotify.com/v1/playlists/${playlistres.id}/tracks?uris=${uris}`
+          await fetch(addSongsURL, { headers, method: 'POST' })
+            .then((response) => response.json())
+            .then((res) => {
+              console.log('songs', res)
+            })
+          await req.transaction.commit()
+          console.log('playlist res', playlistres)
+          res.status(200).json({ url: playlistres.external_urls.spotify })
+        })
+        .catch((error) => {
+          // handle error
+          console.log('error', error)
+        })
+        .catch((error) => {
+          // handle error
+          err.handler = 'createPlaylist'
+          next(error)
+        })
+    } else {
+      res.status('401').send({ error: "room code can't be found" })
+    }
+  } catch (err) {
+    console.log('error when making playlist', err)
+    await req.transaction.rollback()
+    res.send(err)
+  }
+})
 
 router.get('/logged', async (req, res) => {
   const body = {
@@ -208,22 +215,22 @@ router.get('/logged', async (req, res) => {
     code: req.query.code,
     redirect_uri: process.env.REDIRECTURI,
     client_id: process.env.CLIENT_ID,
-    client_secret: process.env.CLIENT_SECRET,
+    client_secret: process.env.CLIENT_SECRET
   }
 
   await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Accept": "application/json"
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json'
     },
     body: encodeFormData(body)
   })
-  .then(response => response.json())
-  .then(data => {
-    const query = querystring.stringify(data);
-    res.redirect(`${process.env.CLIENT_REDIRECTURI}?${query}`);
-  });
-});
+    .then((response) => response.json())
+    .then((data) => {
+      const query = querystring.stringify(data)
+      res.redirect(`${process.env.CLIENT_REDIRECTURI}?${query}`)
+    })
+})
 
-module.exports = router;
+module.exports = router

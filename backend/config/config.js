@@ -1,4 +1,4 @@
-require('dotenv').config(); // this is important!
+require('dotenv').config() // this is important!
 module.exports = {
   development: {
     username: process.env.USER,
@@ -6,7 +6,7 @@ module.exports = {
     database: process.env.NAME,
     host: process.env.HOST,
     dialect: 'postgres',
-    seederStorage: 'sequelize',
+    seederStorage: 'sequelize'
   },
   test: {
     username: process.env.USER,
@@ -14,12 +14,12 @@ module.exports = {
     database: process.env.NAME,
     host: process.env.HOST,
     dialect: 'postgres',
-    seederStorage: 'sequelize',
+    seederStorage: 'sequelize'
   },
-   production: {
+  production: {
     use_env_variable: 'DATABASE_URL',
     dialect: 'postgres',
-    protocol: "postgres",
-    dialectOptions: { ssl: {require: true, rejectUnauthorized: false } },
-  },
+    protocol: 'postgres',
+    dialectOptions: { ssl: { require: true, rejectUnauthorized: false } }
+  }
 }
