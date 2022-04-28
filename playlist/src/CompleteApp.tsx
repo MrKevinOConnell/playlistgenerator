@@ -16,7 +16,7 @@ const CompleteApp = () => {
   const [connectedRoom, setConnectedRoom] = useState(null as any)
   const [recentPlaylist, setRecentPlaylist] = useState(null as any)
   const location = useLocation()
-  const socket = io("https://find-new-songs.herokuapp.com");
+  const socket = io();
   const getHashParams = () => {
     const hashParams = {} as any
     let e,
