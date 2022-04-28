@@ -210,22 +210,21 @@ fetch(url, { headers })
           })
           .catch(error => {
             // handle error
-            
+            toast.error(`There was an error when trying to create the room: ${error}`,{
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
           // handle error
           
           })
         })
         .catch(error => {
             // handle error
-          toast.error(`There was an error when trying to create the room: ${error}`,{
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
           });
           }
 
