@@ -133,7 +133,7 @@ fetch(url, { headers })
       fetch(url, { headers })
         .then(response => response.json())
         .then(async data => {
-              const url = "http://localhost:8888/api/playlist";
+              const url = "https://find-new-songs.herokuapp.com/api/playlist";
               const headers = {
                 Authorization: 'Bearer ' + currentHashParams.access_token,
                 "Content-Type": "application/json"
@@ -165,7 +165,7 @@ fetch(url, { headers })
       })
       .catch(error => {
           // handle error
-        toast.error(`There was an error when trying to create the room: ${error}`,{
+        toast.error(`There was an error when trying to create the playlist: ${error}`,{
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -187,7 +187,7 @@ fetch(url, { headers })
         fetch(url, { headers })
           .then(response => response.json())
           .then(async data => {
-                const url = "http://localhost:8888/api/joinRoom";
+                const url = "https://find-new-songs.herokuapp.com/api/joinRoom";
                 const headers = {
                   Authorization: 'Bearer ' + currentHashParams.access_token,
                   "Content-Type": "application/json"
@@ -238,7 +238,7 @@ const CreateRoom = () => {
 fetch(url, { headers })
   .then(response => response.json())
   .then(async data => {
-        const url = "http://localhost:8888/api/room";
+        const url = "https://find-new-songs.herokuapp.com/api/room";
         const headers = {
           Authorization: 'Bearer ' + currentHashParams.access_token,
           "Content-Type": "application/json"
@@ -361,7 +361,7 @@ renderTrackInfo()
     justifyContent="space-around"
     style={{ minHeight: '110vh' }} >
         <Grid>
-    <Link style={{textAlign: "center"}} href="http://localhost:8888/api/login">Sign into Spotify here</Link>
+    <Link style={{textAlign: "center"}} href="https://find-new-songs.herokuapp.com/api/login">Sign into Spotify here</Link>
     </Grid>
    
     {!!topSongsInfo.length && renderTrackInfo()}
