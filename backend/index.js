@@ -25,13 +25,19 @@ application.use('/api', AuthRoutes)
 application.use(express.static(path.resolve(__dirname, './../playlist/build')))
 application.get('/*', (req, res) => res.sendFile(path.resolve(__dirname, './../playlist/build', 'index.html')))
 
-io.on('connection', (socket) => {
-  socket.on('submission', (data) => {
-    io.emit(`${data.roomCode}`,{ url: data.url })
-  })
-})
 server.listen(PORT, () => {
   console.log(`Server started on port ${PORT}:)`)
 })
+io.on("connection", (socket) => {
+  console.log(`Client ${socket.id} connected`);
 
-global.io = io
+  io.on('submission', (data) => {
+    console.log('submission!',data)
+    io.emit(`${data.roomCode}`,{ url: data.url })
+  })
+
+  // Leave the room if the user closes the socket
+
+});
+
+module.exports = io

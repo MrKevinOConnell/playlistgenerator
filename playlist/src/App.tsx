@@ -4,8 +4,13 @@ import CompleteApp from './CompleteApp'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer, toast } from 'react-toastify'
+import SocketContext, { SocketProvider } from './CreateContext'
+import { io } from 'socket.io-client'
+
 function App() {
+  const socket = io('https://find-new-songs.herokuapp.com', { transports: ['websocket'] })
   return (
+<SocketContext.Provider value={socket}>
     <Router>
       {' '}
       <ToastContainer
@@ -23,6 +28,7 @@ function App() {
         <Route path="/" element={<CompleteApp />} />{' '}
       </Routes>
     </Router>
+    </SocketContext.Provider>
   )
 }
 
