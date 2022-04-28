@@ -26,8 +26,8 @@ application.use(express.static(path.resolve(__dirname, './../playlist/build')))
 application.get('/*', (req, res) => res.sendFile(path.resolve(__dirname, './../playlist/build', 'index.html')))
 
 io.on('connection', (socket) => {
-  socket.on('broadcast', ({ ev, args }) => {
-    io.sockets.emit(ev, args)
+  socket.on('submission', (data) => {
+    io.emit(`${data.roomCode}`,{ url: data.url })
   })
 })
 server.listen(PORT, () => {

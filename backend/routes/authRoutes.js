@@ -190,7 +190,7 @@ router.post('/playlist', async (req, res, next) => {
           await req.transaction.commit()
           console.log('playlist res', playlistres)
           res.status(200).json({ url: playlistres.external_urls.spotify })
-          io.emit(roomCode, { url: playlistres.external_urls.spotify })
+          io.emit('submission',{ roomCode, url: playlistres.external_urls.spotify })
         })
         .catch((error) => {
           // handle error
