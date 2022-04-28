@@ -120,6 +120,7 @@ router.post('/playlist', async (req,res,next) => {
       Authorization: 'Bearer ' + token
     };
     //,"users":[{"id":"kevinoconnell1","favorites":{"artists":[],"songs":[]}}],
+    console.log("user length",foundRoom.users.length);
     for(const user of foundRoom.users) {
 const favorites = user.favorites
 const userSongs =  favorites.songs.map(song=>song.id)
@@ -134,12 +135,13 @@ const userArtists = favorites.artists.map((artist) => artist.id)
     commonSongs = topKFrequent(commonSongs,foundRoom.users.length/2);
     commonArtists = topKFrequent(commonArtists,foundRoom.users.length/2).slice(0,5)
     commonSongIds = topKFrequent(commonSongIds,foundRoom.users.length/2).slice(0,5)
-    console.log('common songs',commonSongs)
-    console.log('common songids',commonSongIds)
-    console.log('common Artists',commonArtists)
+    console.log('common songs',commonSongs.length)
+    console.log('common songids',commonSongIds.length)
+    console.log('common Artists',commonArtists.length)
     const artist = `${commonArtists[0]},${commonArtists[1]}`
     const song = `${commonSongIds[0]},${commonSongIds[1]}`
     const remain = commonSongs.length >= 60 ? 0 : 60-commonSongs.length
+    console.log("remain length",remain);
     if(remain > 0) {
       //grabs ids
     const recommendurl = `https://api.spotify.com/v1/recommendations/?seed_artists=${artist}&seed_tracks=${song}&limit=${remain}`;
