@@ -21,6 +21,7 @@ const CompleteApp = () => {
     let e,
       // eslint-disable-next-line prefer-const
       r = /([^&;=]+)=?([^&;]*)/g,
+         // eslint-disable-next-line prefer-const
       q = window.location.search.substring(1)
     while ((e = r.exec(q))) {
       hashParams[e[1]] = decodeURIComponent(e[2])
