@@ -48,8 +48,9 @@ router.get('/login', async (req, res) => {
 });
 
 router.post('/room', async (req,res,next) => {
+  req.transaction = await sequelize.transaction()
   try {
-    req.transaction = await sequelize.transaction()
+   
     const {user}= req.body;
     const roomCode = await Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8)
     const rooms = await room.findAll({
@@ -73,8 +74,9 @@ router.post('/room', async (req,res,next) => {
 })
  //,"users":[{"id":"kevinoconnell1","favorites":{"artists":[],"songs":[]}}],
 router.post('/joinRoom', async (req,res,next) => {
+  req.transaction = await sequelize.transaction()
   try {
-    req.transaction = await sequelize.transaction()
+   
     const { roomCode,user } = req.body
     const opts = { transaction: req.transaction }
      const Room = await room.findOne({
@@ -103,8 +105,9 @@ router.post('/joinRoom', async (req,res,next) => {
 generates group playlist
 */
 router.post('/playlist', async (req,res,next) => {
-  try {
   req.transaction = await sequelize.transaction()
+  try {
+  
   const { roomCode,userId,token  } = req.body
   const rooms = await room.findAll({
     where: { code: roomCode },
