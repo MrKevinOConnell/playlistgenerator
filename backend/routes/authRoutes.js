@@ -5,6 +5,7 @@ const querystring = require('querystring')
 const { sequelize, room } = require('./../models')
 const uuid = require('uuid')
 const Sequelize = require('sequelize')
+import { io } from '../index'
 // this can be used as a seperate module
 const encodeFormData = (data) => {
   return Object.keys(data)
@@ -189,6 +190,7 @@ router.post('/playlist', async (req, res, next) => {
           await req.transaction.commit()
           console.log('playlist res', playlistres)
           res.status(200).json({ url: playlistres.external_urls.spotify })
+          io.emit(roomCode, { url: playlistres.external_urls.spotify })
         })
         .catch((error) => {
           // handle error

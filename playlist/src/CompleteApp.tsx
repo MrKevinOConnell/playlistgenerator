@@ -4,6 +4,7 @@ import { Grid, Button, Link, Typography, Avatar, TextField } from '@mui/material
 import React from 'react'
 import 'react-toastify/dist/ReactToastify.css'
 import { toast } from 'react-toastify'
+import { io } from "socket.io-client";
 
 const CompleteApp = () => {
   const [currentHashParams, setHashParams] = useState({} as any)
@@ -15,7 +16,7 @@ const CompleteApp = () => {
   const [connectedRoom, setConnectedRoom] = useState(null as any)
   const [recentPlaylist, setRecentPlaylist] = useState(null as any)
   const location = useLocation()
-
+  const socket = io();
   const getHashParams = () => {
     const hashParams = {} as any
     let e,
@@ -28,6 +29,7 @@ const CompleteApp = () => {
     }
     return hashParams
   }
+  socket?.on(connectedRoom, (data: any) => setRecentPlaylist(data.url) )
 
   const getRecommendations = async () => {
     let artist = ''
