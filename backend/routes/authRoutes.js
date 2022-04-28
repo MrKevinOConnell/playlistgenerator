@@ -99,6 +99,7 @@ router.post('/joinRoom', async (req, res, next) => {
         await Room.update({ users })
         await req.transaction.commit()
         res.status(200).json(Room.users)
+        io.emit(`${roomCode}/joined`,`User joined room ${roomCode} `)
       } else {
         throw new Error('You are already in this room!')
       }
@@ -191,7 +192,7 @@ router.post('/playlist', async (req, res, next) => {
           await req.transaction.commit()
           console.log('playlist res', playlistres)
           res.status(200).json({ url: playlistres.external_urls.spotify })
-          io.emit(`${roomCode}`,{ roomCode:roomCode, url: playlistres.external_urls.spotify })
+          io.emit(`${roomCode}/playlist`,{ roomCode:roomCode, url: playlistres.external_urls.spotify })
         })
         .catch((error) => {
           // handle error
