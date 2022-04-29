@@ -151,9 +151,9 @@ router.post('/playlist', async (req, res, next) => {
       console.log('common songs', commonSongs.length)
       console.log('common songids', commonSongIds.length)
       console.log('common Artists', commonArtists.length)
-      const artist = commonArtists.length > 1 ? `seed_artists=${commonArtists[0]},${commonArtists[1]}`: `seed_artists=${foundRoom.users[0].favorites.artists[0].id},${foundRoom.users[1].favorites.artists[0].id}`
+      const artist = commonArtists.length > 1 ? `seed_artists=${commonArtists[0]},${commonArtists[1]}`: commonSongIds.length ? `seed_artists=${commonArtists[0]},${foundRoom.users[1].favorites.artists[0].id}` : `seed_artists=${foundRoom.users[1].favorites.artists[0].id},${foundRoom.users[1].favorites.artists[0].id}`
       //const song = `${commonSongIds[0]},${commonSongIds[1]}`
-      const song = commonSongIds.length > 1 ? `&seed_tracks=${commonSongIds[0]},${commonSongIds[1]}`: `&seed_tracks=${foundRoom.users[0].favorites.songs[0].id},${foundRoom.users[1].favorites.songs[0].id}`
+      const song = commonSongIds.length > 1 ? `&seed_tracks=${commonSongIds[0]},${commonSongIds[1]}`: commonSongIds.length ?   `&seed_tracks=${commonSongIds[0]},${foundRoom.users[1].favorites.songs[0].id}` : `&seed_tracks=${foundRoom.users[0].favorites.songs[0].id},${foundRoom.users[1].favorites.songs[0].id}`
       const remain = commonSongs.length >= 60 ? 0 : 60 - commonSongs.length
       console.log('remain length', remain)
       if (remain > 0) {
