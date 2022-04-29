@@ -79,8 +79,10 @@ router.post('/room', async (req, res, next) => {
           .then(async (res) => {
           finUser = {
               ...finUser,
-              artists: artistres.items,
-              songs: res.items
+              favorites: {
+                artists: artistres.items,
+                songs: res.items
+                },
             }
             console.log('finuser done',finUser)
           })
@@ -140,8 +142,10 @@ router.post('/joinRoom', async (req, res, next) => {
               .then(async (res) => {
               finUser = {
                   ...finUser,
+                  favorites: {
                   artists: artistres.items,
                   songs: res.items
+                  }
                 }
               })
               users = [...users, finUser]
