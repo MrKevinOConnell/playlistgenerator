@@ -51,7 +51,8 @@ router.get('/login', async (req, res) => {
 router.post('/room', async (req, res, next) => {
   req.transaction = await sequelize.transaction()
   try {
-    const { user } = req.body
+    const { user,token } = req.body
+    let finUser = {...user}
     const roomCode = await Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
@@ -63,6 +64,32 @@ router.post('/room', async (req, res, next) => {
     if (!existRoom) {
       const id = await uuid.v4()
       const newRoom = await room.create({ code: roomCode, users: [user], id })
+    const artisturl = 'https://api.spotify.com/v1/me/top/artists/?limit=60'
+    const headers = {
+      Authorization: 'Bearer ' + token
+    }
+    //top artists gotten here
+    await fetch(artisturl, { headers })
+      .then((response) => response.json())
+      .then(async (artistres) => {
+        //top songs gotten here
+        const songsurl = 'https://api.spotify.com/v1/me/top/tracks/?limit=60'
+        await fetch(songsurl, { headers })
+          .then((response) => response.json())
+          .then(async (res) => {
+          finUser = {
+              ...finUser,
+              artists: artistres.items,
+              songs: res.items
+            }
+          })
+          .catch((error) => {
+            // handle error
+          })
+      })
+      .catch((error) => {
+        // handle error
+      })
       await req.transaction.commit()
       res.json(newRoom)
     } else {
@@ -78,7 +105,8 @@ router.post('/room', async (req, res, next) => {
 router.post('/joinRoom', async (req, res, next) => {
   req.transaction = await sequelize.transaction()
   try {
-    const { roomCode, user } = req.body
+    const { roomCode, user,token } = req.body
+    let finUser = {...user}
     const opts = { transaction: req.transaction }
     const Room = await room.findOne(
       {
@@ -96,6 +124,32 @@ router.post('/joinRoom', async (req, res, next) => {
         users = [...users, user]
         console.log('new users', users)
         await Room.update({ users })
+        const artisturl = 'https://api.spotify.com/v1/me/top/artists/?limit=60'
+        const headers = {
+          Authorization: 'Bearer ' + token
+        }
+        //top artists gotten here
+        await fetch(artisturl, { headers })
+          .then((response) => response.json())
+          .then(async (artistres) => {
+            //top songs gotten here
+            const songsurl = 'https://api.spotify.com/v1/me/top/tracks/?limit=60'
+            await fetch(songsurl, { headers })
+              .then((response) => response.json())
+              .then(async (res) => {
+              finUser = {
+                  ...finUser,
+                  artists: artistres.items,
+                  songs: res.items
+                }
+              })
+              .catch((error) => {
+                // handle error
+              })
+          })
+          .catch((error) => {
+            // handle error
+          })
         await req.transaction.commit()
         res.status(200).json(Room.users)
         io.emit(`${roomCode}/joined`,`User joined room ${roomCode} `)

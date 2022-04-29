@@ -246,8 +246,8 @@ const CompleteApp = () => {
           user: {
             name: data.display_name ? data.display_name : data.id,
             id: data.id,
-            favorites: completeData
-          }
+          },
+          token: currentHashParams.access_token,
         })
         fetch(url, { headers, body, method: 'post' })
           .then((response) => response.json())
@@ -303,8 +303,8 @@ const CompleteApp = () => {
           user: {
             name: data.display_name ? data.display_name : data.id,
             id: data.id,
-            favorites: completeData
-          }
+          },
+          token: currentHashParams.access_token,
         })
 
         fetch(url, { headers, body, method: 'post' })
