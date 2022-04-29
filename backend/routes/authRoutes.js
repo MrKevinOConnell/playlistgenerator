@@ -15,7 +15,6 @@ const encodeFormData = (data) => {
 
 function topKFrequent(nums, k) {
   let hash = {}
-
   for (let num of nums) {
     if (!hash[`${num}`]) hash[num] = 0
     hash[`${num}`]++
@@ -152,13 +151,14 @@ router.post('/playlist', async (req, res, next) => {
       console.log('common songs', commonSongs.length)
       console.log('common songids', commonSongIds.length)
       console.log('common Artists', commonArtists.length)
-      const artist = `${commonArtists[0]},${commonArtists[1]}`
-      const song = `${commonSongIds[0]},${commonSongIds[1]}`
+      const artist = commonArtists.length > 1 ? `seed_artists=${commonArtists[0]},${commonArtists[1]}`: `seed_artists=${foundRoom.users[0].favorites.artists[0].id},${foundRoom.users[1].favorites.artists[0].id}`
+      //const song = `${commonSongIds[0]},${commonSongIds[1]}`
+      const song = commonSongIds.length > 1 ? `&seed_tracks=${commonSongIds[0]},${commonSongIds[1]}`: `&seed_tracks=${foundRoom.users[0].favorites.songs[0].id},${foundRoom.users[1].favorites.songs[0].id}`
       const remain = commonSongs.length >= 60 ? 0 : 60 - commonSongs.length
       console.log('remain length', remain)
       if (remain > 0) {
         //grabs ids
-        const recommendurl = `https://api.spotify.com/v1/recommendations/?seed_artists=${artist}&seed_tracks=${song}&limit=${remain}`
+        const recommendurl = `https://api.spotify.com/v1/recommendations/?${artist}${song}&limit=${remain}`
         await fetch(recommendurl, { headers })
           .then((response) => response.json())
           .then(async (res) => {
