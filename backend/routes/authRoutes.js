@@ -207,7 +207,7 @@ router.post('/playlist', async (req, res, next) => {
         commonSongs = [...commonSongs, ...userUris]
       }
 
-      commonSongs = topKFrequent(commonSongs, foundRoom.users.length / 2)
+      commonSongs = topKFrequent(commonSongs, foundRoom.users.length / 2).sort((a, b) => 0.5 - Math.random());
       commonArtists = topKFrequent(commonArtists, foundRoom.users.length / 2).slice(0, 5)
       commonSongIds = topKFrequent(commonSongIds, foundRoom.users.length / 2).slice(0, 5)
       console.log('common songs', commonSongs.length)
