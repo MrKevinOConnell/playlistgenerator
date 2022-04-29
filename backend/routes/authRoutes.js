@@ -64,7 +64,7 @@ router.post('/room', async (req, res, next) => {
     const existRoom = rooms[0]
     if (!existRoom) {
       const id = await uuid.v4()
-    const artisturl = 'https://api.spotify.com/v1/me/top/artists/?limit=60'
+    const artisturl = 'https://api.spotify.com/v1/me/top/artists/?limit=70'
     const headers = {
       Authorization: 'Bearer ' + token
     }
@@ -73,7 +73,7 @@ router.post('/room', async (req, res, next) => {
       .then((response) => response.json())
       .then(async (artistres) => {
         //top songs gotten here
-        const songsurl = 'https://api.spotify.com/v1/me/top/tracks/?limit=60'
+        const songsurl = 'https://api.spotify.com/v1/me/top/tracks/?limit=70'
         await fetch(songsurl, { headers })
           .then((response) => response.json())
           .then(async (res) => {
