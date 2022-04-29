@@ -63,7 +63,6 @@ router.post('/room', async (req, res, next) => {
     const existRoom = rooms[0]
     if (!existRoom) {
       const id = await uuid.v4()
-      const newRoom = await room.create({ code: roomCode, users: [user], id })
     const artisturl = 'https://api.spotify.com/v1/me/top/artists/?limit=60'
     const headers = {
       Authorization: 'Bearer ' + token
@@ -85,11 +84,14 @@ router.post('/room', async (req, res, next) => {
           })
           .catch((error) => {
             // handle error
+            res.status(401).send("error fetching songs: " + error  )
           })
       })
       .catch((error) => {
         // handle error
+        res.status(401).send("error fetching artists: " + error  )
       })
+      const newRoom = await room.create({ code: roomCode, users: [finUser], id })
       await req.transaction.commit()
       res.json(newRoom)
     } else {
@@ -121,9 +123,6 @@ router.post('/joinRoom', async (req, res, next) => {
       const ids = users.map((user) => user.id)
       const index = ids.findIndex((id) => id === user.id)
       if (index === -1) {
-        users = [...users, user]
-        console.log('new users', users)
-        await Room.update({ users })
         const artisturl = 'https://api.spotify.com/v1/me/top/artists/?limit=60'
         const headers = {
           Authorization: 'Bearer ' + token
@@ -143,6 +142,9 @@ router.post('/joinRoom', async (req, res, next) => {
                   songs: res.items
                 }
               })
+              users = [...users, finUser]
+              console.log('new users', users)
+              await Room.update({ users })
               .catch((error) => {
                 // handle error
               })
