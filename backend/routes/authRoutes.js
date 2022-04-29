@@ -53,6 +53,7 @@ router.post('/room', async (req, res, next) => {
   try {
     const { user,token } = req.body
     let finUser = {...user}
+    console.log("start user",finUser)
     const roomCode = await Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
@@ -81,6 +82,7 @@ router.post('/room', async (req, res, next) => {
               artists: artistres.items,
               songs: res.items
             }
+            console.log('finuser done',finUser)
           })
           .catch((error) => {
             // handle error
