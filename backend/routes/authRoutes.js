@@ -21,8 +21,9 @@ function topKFrequent(nums, k) {
   }
   const hashToArray = Object.entries(hash)
   const sortedArray = hashToArray.sort((a, b) => b[1] - a[1])
-  const finishedElements = sortedArray.filter((element) => element[1] >= k)
+  const finishedElements = sortedArray.filter((element) => {k > 2 ? element[1] >= k : element[1] == 2})
   const sortedElements = finishedElements.map((num) => num[0])
+  console.log('sorted elements len',sortedElements.length)
   return sortedElements
 }
 
@@ -127,7 +128,7 @@ router.post('/joinRoom', async (req, res, next) => {
       const ids = users.map((user) => user.id)
       const index = ids.findIndex((id) => id === user.id)
       if (index === -1) {
-        const artisturl = 'https://api.spotify.com/v1/me/top/artists/?limit=60'
+        const artisturl = 'https://api.spotify.com/v1/me/top/artists/?limit=70'
         const headers = {
           Authorization: 'Bearer ' + token
         }
@@ -136,7 +137,7 @@ router.post('/joinRoom', async (req, res, next) => {
           .then((response) => response.json())
           .then(async (artistres) => {
             //top songs gotten here
-            const songsurl = 'https://api.spotify.com/v1/me/top/tracks/?limit=60'
+            const songsurl = 'https://api.spotify.com/v1/me/top/tracks/?limit=70'
             await fetch(songsurl, { headers })
               .then((response) => response.json())
               .then(async (res) => {
@@ -214,9 +215,8 @@ router.post('/playlist', async (req, res, next) => {
       console.log('common songids', commonSongIds.length)
       console.log('common Artists', commonArtists.length)
       const artist = commonArtists.length > 1 ? `seed_artists=${commonArtists[0]},${commonArtists[1]}`: commonSongIds.length ? `seed_artists=${commonArtists[0]},${foundRoom.users[1].favorites.artists[0].id}` : `seed_artists=${foundRoom.users[1].favorites.artists[0].id},${foundRoom.users[1].favorites.artists[0].id}`
-      //const song = `${commonSongIds[0]},${commonSongIds[1]}`
       const song = commonSongIds.length > 1 ? `&seed_tracks=${commonSongIds[0]},${commonSongIds[1]}`: commonSongIds.length ?   `&seed_tracks=${commonSongIds[0]},${foundRoom.users[1].favorites.songs[0].id}` : `&seed_tracks=${foundRoom.users[0].favorites.songs[0].id},${foundRoom.users[1].favorites.songs[0].id}`
-      const remain = commonSongs.length >= 60 ? 0 : 60 - commonSongs.length
+      const remain = commonSongs.length >= 70 ? 0 : 70 - commonSongs.length
       console.log('remain length', remain)
       if (remain > 0) {
         //grabs ids
@@ -225,7 +225,7 @@ router.post('/playlist', async (req, res, next) => {
           .then((response) => response.json())
           .then(async (res) => {
             const uris = res.tracks.map((track) => track.uri)
-            commonSongs = [...commonSongs, ...uris].slice(0, 60)
+            commonSongs = [...commonSongs, ...uris].slice(0, 70)
           })
           .catch((error) => {
             // handle error
@@ -260,10 +260,10 @@ router.post('/playlist', async (req, res, next) => {
           // handle error
           console.log('error', error)
         })
-        .catch((error) => {
+        .catch((err) => {
           // handle error
           err.handler = 'createPlaylist'
-          next(error)
+          next(err)
         })
     } else {
       res.status('401').send({ error: "room code can't be found" })
